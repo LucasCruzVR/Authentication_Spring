@@ -3,7 +3,6 @@ package com.castgroup.auth.api.config;
 import java.util.Arrays;
 import java.util.Collections;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,9 +20,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
-import com.castgroup.auth.api.controller.exception.RestAuthenticationEntryPoint;
-import com.castgroup.auth.api.security.JWTAuthenticationFilter;
-
 import lombok.AllArgsConstructor;
 
 @SuppressWarnings("deprecation")
@@ -32,9 +28,6 @@ import lombok.AllArgsConstructor;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private JwtConfig jwtConfig;
-
     private final UserDetailsService userDetailsService;
     private static final String[] PUBLIC_ROUTES = {
         "/auth/**"
@@ -42,10 +35,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.exceptionHandling().authenticationEntryPoint(new RestAuthenticationEntryPoint());
         http
             .cors().and().csrf().disable()
-            .addFilter(new JWTAuthenticationFilter (authenticationManager(), jwtConfig))
             .authorizeHttpRequests((auth) -> auth
                 .antMatchers(PUBLIC_ROUTES).permitAll()
                 .anyRequest().authenticated()

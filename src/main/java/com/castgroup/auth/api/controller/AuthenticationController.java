@@ -13,10 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.castgroup.auth.api.config.JwtConfig;
 import com.castgroup.auth.api.domain.User;
 import com.castgroup.auth.api.model.UserAuthReqDTO;
-import com.castgroup.auth.api.model.UserAuthRespDTO;
 import com.castgroup.auth.api.model.UserRespDTO;
 import com.castgroup.auth.api.service.AuthenticationService;
 
@@ -40,6 +38,9 @@ public class AuthenticationController {
     @ResponseBody
     public ResponseEntity<?> login(@RequestBody UserAuthReqDTO userReq) {
         try {
+            if (userReq.getEmail() == null || userReq.getPassword() == null) {
+                throw new NullPointerException("Email and Password are required!");
+            }
             Authentication authentication = authManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                         userReq.getEmail(), userReq.getPassword())

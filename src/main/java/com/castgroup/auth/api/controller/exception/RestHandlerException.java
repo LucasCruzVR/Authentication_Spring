@@ -1,8 +1,6 @@
 package com.castgroup.auth.api.controller.exception;
 
-import javax.security.sasl.AuthenticationException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -14,7 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
-@RestControllerAdvice(basePackages = "com.auth.api")
+@RestControllerAdvice
 public class RestHandlerException extends ResponseEntityExceptionHandler {
     
     @ExceptionHandler(IllegalArgumentException.class)
@@ -24,11 +22,10 @@ public class RestHandlerException extends ResponseEntityExceptionHandler {
         return buildResponseEntity(response);
     }
 
-    @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<Object> handleAuthenticationException(HttpServletResponse response, AuthenticationException exception) {
-        StandardError r = new StandardError(HttpStatus.UNPROCESSABLE_ENTITY, "exception.getMessage()");
-        r.setMessage("The row for address is not existent: " );
-        return buildResponseEntity(r);
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<Object> handleAuthenticationException(HttpServletRequest request, NullPointerException exception) {
+        StandardError response = new StandardError(HttpStatus.UNPROCESSABLE_ENTITY, exception.getMessage());
+        return buildResponseEntity(response);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
