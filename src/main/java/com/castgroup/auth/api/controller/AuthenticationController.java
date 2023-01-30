@@ -1,12 +1,13 @@
 package com.castgroup.auth.api.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,9 +29,9 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final AuthenticationManager authManager;
     
-    @PostMapping
+    @PostMapping("/sign-up")
     @ResponseBody
-    public ResponseEntity<UserRespDTO> createUser(@RequestBody @Validated User user) {
+    public ResponseEntity<UserRespDTO> createUser(@RequestBody @Valid User user) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authenticationService.saveUser(user));
     }
 
@@ -49,7 +50,7 @@ public class AuthenticationController {
             return ResponseEntity.ok().body(authenticationService.authenticationToken(user));
              
         } catch (BadCredentialsException ex) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            throw new BadCredentialsException("Email or Password are incorrect!");
         }
     }
 }

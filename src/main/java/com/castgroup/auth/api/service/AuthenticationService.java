@@ -29,8 +29,7 @@ public class AuthenticationService implements UserDetailsService{
     @Transactional
     public UserRespDTO saveUser(User newUser){
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
-        throw new IllegalArgumentException("erro");
-        //return modelMapper.map(userRepository.save(newUser), UserRespDTO.class);
+        return modelMapper.map(userRepository.save(newUser), UserRespDTO.class);
     }
 
     @Override
